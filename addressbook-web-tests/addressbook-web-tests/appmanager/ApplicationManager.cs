@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 
 namespace WebAddressbookTests
@@ -26,16 +27,22 @@ namespace WebAddressbookTests
 
         public ApplicationManager()
         {
-            FirefoxOptions options = new FirefoxOptions();
-            options.BrowserExecutableLocation = @"c:\Program Files\Mozilla Firefox ESR\firefox.exe";
-            options.UseLegacyImplementation = true;
-            driver = new FirefoxDriver(options);
+            // FirefoxOptions options = new FirefoxOptions();
+            // options.BrowserExecutableLocation = @"c:\Program Files\Mozilla Firefox ESR\firefox.exe";
+            // options.UseLegacyImplementation = true;
+            // driver = new FirefoxDriver(options);
+            driver = new ChromeDriver();
             baseURL = "http://localhost/";
 
             Auth = new LoginHelper(driver);
             Navigator = new NavigationHelper(driver, baseURL);
             Contacts = new ContactHelper(driver);
             Groups = new GroupHelper(driver);
+        }
+
+        public void AcceptAlert()
+        {
+            driver.SwitchTo().Alert().Accept();
         }
 
         public void AppStop()

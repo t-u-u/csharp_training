@@ -9,9 +9,6 @@ namespace WebAddressbookTests
         [Test]
         public void ContactCreationTest()
         {
-            app.Navigator.OpenHomePage();
-            app.Auth.Login(new AccountData("admin", "secret"));
-            app.Contacts.InitContactCreation();
             ContactData contact = new ContactData();
             contact.FirstName = "1";
             contact.MiddleName = "2";
@@ -36,10 +33,34 @@ namespace WebAddressbookTests
             contact.Notes = "17";
             contact.SecondaryHome = "18";
 
-            app.Contacts.FillNewContactForm(contact);
-            app.Contacts.SubmitContactForm();
+            app.Contacts
+                .InitContactCreation()
+                .FillContactForm(contact)
+                .SubmitContactForm();
             app.Navigator.OpenHomePage();
-            app.Auth.Logout();
+        }
+
+        [Test]
+        public void ContactRemovalTest()
+        {
+            app.Contacts
+                .SelectContact(1)
+                .DeleteContact();
+            app.AcceptAlert();
+        }
+
+        [Test]
+        public void ContactUpdateTest()
+        {
+            ContactData contact = new ContactData();
+            contact.FirstName = "1 mod";
+            contact.MiddleName = "2 mod";
+
+            app.Contacts
+                .EditContact(1)
+                .FillContactForm(contact)
+                .SubmitContactForm();
+            app.Navigator.OpenHomePage();
         }
     }
 }

@@ -8,26 +8,45 @@ namespace WebAddressbookTests
         [Test]
         public void GroupCreationTest()
         {
-            app.Navigator.OpenHomePage();
-            app.Auth.Login(new AccountData("admin", "secret"));
             app.Navigator.OpenGroupsPage();
-            app.Groups.InitGroupCreation();
-            app.Groups.FillNewGroupForm(new GroupData("111", "222" , "333"));
-            app.Groups.SubmitGroupCreation();
+            app.Groups
+                .InitGroupCreation()
+                .FillGroupForm(new GroupData("111", "222" , "333"))
+                .SubmitGroupCreation();
             app.Navigator.OpenGroupsPage();
-            app.Auth.Logout();
+        }
+
+        [Test]
+        public void EmptyGroupCreationTest()
+        {
+            app.Navigator.OpenGroupsPage();
+            app.Groups
+                .InitGroupCreation()
+                .FillGroupForm(new GroupData("", "", ""))
+                .SubmitGroupCreation();
+            app.Navigator.OpenGroupsPage();
+        }
+
+        [Test]
+        public void GroupUpdateTest()
+        {
+            app.Navigator.OpenGroupsPage();
+            app.Groups
+                .SelectGroup(1)
+                .EditGroups()
+                .FillGroupForm(new GroupData("111 mod", "222 mod", "333 mod"))
+                .SubmitGroupUpdate();
+            app.Navigator.OpenGroupsPage();
         }
 
         [Test]
         public void GroupRemovalTest()
         {
-            app.Navigator.OpenHomePage();
-            app.Auth.Login(new AccountData("admin", "secret"));
             app.Navigator.OpenGroupsPage();
-            app.Groups.SelectGroup(1);
-            app.Groups.DeleteGroups();
+            app.Groups
+                .SelectGroup(1)
+                .DeleteGroups();
             app.Navigator.OpenGroupsPage();
-            app.Auth.Logout();
         }
     }
 }

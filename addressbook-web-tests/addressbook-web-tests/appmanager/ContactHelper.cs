@@ -13,12 +13,13 @@ namespace WebAddressbookTests
     {
         public ContactHelper(IWebDriver driver) : base(driver) { }
 
-        public void SubmitContactForm()
+        public ContactHelper SubmitContactForm()
         {
             driver.FindElement(By.CssSelector("input[type=\"submit\"]")).Click();
+            return this;
         }
 
-        public void FillNewContactForm(ContactData contactData)
+        public ContactHelper FillContactForm(ContactData contactData)
         {
             if (contactData.FirstName != null)
             {
@@ -131,11 +132,33 @@ namespace WebAddressbookTests
                 driver.FindElement(By.Name("phone2")).Clear();
                 driver.FindElement(By.Name("phone2")).SendKeys(contactData.SecondaryHome);
             }
+            return this;
         }
 
-        public void InitContactCreation()
+        public ContactHelper InitContactCreation()
         {
             driver.FindElement(By.LinkText("add new")).Click();
+            return this;
+        }
+
+        public ContactHelper SelectContact(int index)
+        {
+            string sXpath = String.Format("(//input[@name='selected[]'])[{0}]", index);
+            driver.FindElement(By.XPath(sXpath)).Click();
+            return this;
+        }
+
+        public ContactHelper DeleteContact()
+        {
+            driver.FindElement(By.XPath("//input[@value='Delete']")).Click();
+            return this;
+        }
+
+        public ContactHelper EditContact(int index)
+        {
+            string sXpath = String.Format("//img[@title='Edit'][{0}]", index);
+            driver.FindElement(By.XPath(sXpath)).Click();
+            return this;
         }
     }
 }
