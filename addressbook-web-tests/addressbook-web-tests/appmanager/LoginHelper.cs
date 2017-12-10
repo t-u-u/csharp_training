@@ -13,16 +13,41 @@ namespace WebAddressbookTests
     {
         public LoginHelper(IWebDriver driver) : base(driver) { }
 
-        public void Login(AccountData accountData)
+        public LoginHelper Login(AccountData accountData)
         {
+            if (IsLoggedIn())
+            {
+                if (IsLoggedIn(accountData))
+                {
+                    return this;
+                }
+                Logout();
+            }
             Type(By.Name("user"), accountData.Username);
             Type(By.Name("pass"), accountData.Password);
             driver.FindElement(By.CssSelector("input[type=\"submit\"]")).Click();
+            return this;
         }
 
-        public void Logout()
+        public bool IsLoggedIn(AccountData accountData)
         {
-            driver.FindElement(By.LinkText("Logout")).Click();
+            return IsLoggedIn() 
+                && driver.FindElement(By.Name("logout")).FindElement(By.TagName("b")).Text
+                == "(" + accountData.Username + ")";
+        }
+
+        public bool IsLoggedIn()
+        {
+            return IsElementPresent(By.LinkText("Logout"));
+        }
+
+        public LoginHelper Logout()
+        {
+            if (IsLoggedIn())
+            {
+                driver.FindElement(By.LinkText("Logout")).Click();
+            }
+            return this;
         }
     }
 }
