@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
@@ -19,13 +20,14 @@ namespace WebAddressbookTests
         private NavigationHelper navigationHelper;
         private ContactHelper contactHelper;
         private GroupHelper groupHelper;
+        private static ThreadLocal<ApplicationManager> app = new ThreadLocal<ApplicationManager>();
 
         public LoginHelper Auth { get => loginHelper; set => loginHelper = value; }
         public NavigationHelper Navigator { get => navigationHelper; set => navigationHelper = value; }
         public ContactHelper Contacts { get => contactHelper; set => contactHelper = value; }
         public GroupHelper Groups { get => groupHelper; set => groupHelper = value; }
 
-        public ApplicationManager()
+        private ApplicationManager()
         {
             // FirefoxOptions options = new FirefoxOptions();
             // options.BrowserExecutableLocation = @"c:\Program Files\Mozilla Firefox ESR\firefox.exe";
@@ -40,21 +42,30 @@ namespace WebAddressbookTests
             Groups = new GroupHelper(driver);
         }
 
-        public void AcceptAlert()
-        {
-            driver.SwitchTo().Alert().Accept();
-        }
-
-        public void AppStop()
+        ~ApplicationManager()
         {
             try
             {
                 driver.Quit();
             }
-            catch (Exception)
-            {
-                // Ignore errors if unable to close the browser
-            }
+            catch (Exception) { }
         }
+
+        public static ApplicationManager GetInstance()
+        {
+            if (! app.IsValueCreated)
+            {
+                ApplicationManager newInstance = new ApplicationManager();
+                newInstance.Navigator.OpenHomePage();
+                app.Value = newInstance;
+            }
+            return app.Value;
+        }
+
+        public void AcceptAlert()
+        {
+            driver.SwitchTo().Alert().Accept();
+        }
+
     }
 }

@@ -3,16 +3,14 @@
 namespace WebAddressbookTests
 {
     [TestFixture]
-    public class GroupTests : TestBase
+    public class GroupTests : AuthTestBase
     {
         [Test]
         public void GroupCreationTest()
         {
             app.Navigator.OpenGroupsPage();
             app.Groups
-                .InitGroupCreation()
-                .FillGroupForm(new GroupData("111", "222" , "333"))
-                .SubmitGroupCreation();
+                .CreateGroup(new GroupData("111", "222" , "333"));
             app.Navigator.OpenGroupsPage();
         }
 
@@ -21,9 +19,7 @@ namespace WebAddressbookTests
         {
             app.Navigator.OpenGroupsPage();
             app.Groups
-                .InitGroupCreation()
-                .FillGroupForm(new GroupData("", "", ""))
-                .SubmitGroupCreation();
+                .CreateGroup(new GroupData("", "", ""));
             app.Navigator.OpenGroupsPage();
         }
 

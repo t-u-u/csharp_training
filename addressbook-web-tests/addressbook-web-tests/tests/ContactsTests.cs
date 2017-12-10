@@ -4,7 +4,7 @@
 namespace WebAddressbookTests
 {
     [TestFixture]
-    public class ContactCreationTests : TestBase
+    public class ContactCreationTests : AuthTestBase
     {
         [Test]
         public void ContactCreationTest()
@@ -34,9 +34,7 @@ namespace WebAddressbookTests
             contact.SecondaryHome = "18";
 
             app.Contacts
-                .InitContactCreation()
-                .FillContactForm(contact)
-                .SubmitContactForm();
+                .CreateContact(contact);
             app.Navigator.OpenHomePage();
         }
 

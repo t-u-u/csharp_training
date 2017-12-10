@@ -13,6 +13,7 @@ namespace WebAddressbookTests
     {
         public GroupHelper(IWebDriver driver) : base(driver) { }
 
+
         public GroupHelper DeleteGroups()
         {
             driver.FindElement(By.XPath("(//input[@name='delete'])[2]")).Click();
@@ -32,14 +33,16 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public int CountGroups()
+        {
+            return driver.FindElements(By.XPath("//input[@name='selected[]']")).Count;
+        }
+
         public GroupHelper FillGroupForm(GroupData groupData)
         {
-            driver.FindElement(By.Name("group_name")).Clear();
-            driver.FindElement(By.Name("group_name")).SendKeys(groupData.Group_name);
-            driver.FindElement(By.Name("group_header")).Clear();
-            driver.FindElement(By.Name("group_header")).SendKeys(groupData.Group_header);
-            driver.FindElement(By.Name("group_footer")).Clear();
-            driver.FindElement(By.Name("group_footer")).SendKeys(groupData.Group_footer);
+            Type(By.Name("group_name"), groupData.Group_name);
+            Type(By.Name("group_header"), groupData.Group_header);
+            Type(By.Name("group_footer"), groupData.Group_footer);
             return this;
         }
 
@@ -58,6 +61,14 @@ namespace WebAddressbookTests
         public GroupHelper InitGroupCreation()
         {
             driver.FindElement(By.Name("new")).Click();
+            return this;
+        }
+
+        public GroupHelper CreateGroup(GroupData groupData)
+        {
+            this.InitGroupCreation()
+                .FillGroupForm(groupData)
+                .SubmitGroupCreation();
             return this;
         }
     }
