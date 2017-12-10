@@ -81,7 +81,7 @@ namespace WebAddressbookTests
         }
 
         public ContactHelper DeleteContact()
-        {
+        {    
             driver.FindElement(By.XPath("//input[@value='Delete']")).Click();
             return this;
         }
@@ -100,9 +100,18 @@ namespace WebAddressbookTests
 
         public ContactHelper CreateContact(ContactData contact)
         {
-            this.InitContactCreation()
+            InitContactCreation()
                 .FillContactForm(contact)
                 .SubmitContactForm();
+            return this;
+        }
+
+        public ContactHelper CreateContactIfEmpty(ContactData contact)
+        {
+            if (CountClients() == 0)
+            {
+                CreateContact(contact);
+            }
             return this;
         }
     }

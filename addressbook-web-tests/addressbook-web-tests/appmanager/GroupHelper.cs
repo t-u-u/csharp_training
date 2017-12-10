@@ -64,6 +64,15 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public GroupHelper CreateGroupIfEmpty(GroupData groupData)
+        {
+            if (CountGroups() == 0)
+            {
+                CreateGroup(groupData);
+            }
+            return this;
+        }
+
         public GroupHelper CreateGroup(GroupData groupData)
         {
             this.InitGroupCreation()

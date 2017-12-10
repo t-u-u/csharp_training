@@ -41,7 +41,12 @@ namespace WebAddressbookTests
         [Test]
         public void ContactRemovalTest()
         {
+            ContactData contact = new ContactData();
+            contact.FirstName = "1";
+            contact.MiddleName = "2";
+
             app.Contacts
+                .CreateContactIfEmpty(contact)
                 .SelectContact(1)
                 .DeleteContact();
             app.AcceptAlert();
@@ -51,12 +56,17 @@ namespace WebAddressbookTests
         public void ContactUpdateTest()
         {
             ContactData contact = new ContactData();
-            contact.FirstName = "1 mod";
-            contact.MiddleName = "2 mod";
+            contact.FirstName = "1";
+            contact.MiddleName = "2";
+
+            ContactData contact_mod = new ContactData();
+            contact_mod.FirstName = "1 mod";
+            contact_mod.MiddleName = "2 mod";
 
             app.Contacts
+                .CreateContactIfEmpty(contact)
                 .EditContact(1)
-                .FillContactForm(contact)
+                .FillContactForm(contact_mod)
                 .SubmitContactForm();
             app.Navigator.OpenHomePage();
         }

@@ -28,6 +28,7 @@ namespace WebAddressbookTests
         {
             app.Navigator.OpenGroupsPage();
             app.Groups
+                .CreateGroupIfEmpty(new GroupData("111", "222", "333"))
                 .SelectGroup(1)
                 .EditGroups()
                 .FillGroupForm(new GroupData("111 mod", "222 mod", "333 mod"))
@@ -40,6 +41,7 @@ namespace WebAddressbookTests
         {
             app.Navigator.OpenGroupsPage();
             app.Groups
+                .CreateGroupIfEmpty(new GroupData("1", "2", "3"))
                 .SelectGroup(1)
                 .DeleteGroups();
             app.Navigator.OpenGroupsPage();

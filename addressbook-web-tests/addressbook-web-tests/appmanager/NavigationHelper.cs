@@ -30,7 +30,8 @@ namespace WebAddressbookTests
         public void OpenGroupsPage()
         {
             if (driver.Url == baseURL + "/adressbook/group.php"
-                && IsElementPresent(By.Name("new")) {
+                && IsElementPresent(By.Name("new")))
+            {
                 return;
             }
             driver.FindElement(By.LinkText("groups")).Click();
