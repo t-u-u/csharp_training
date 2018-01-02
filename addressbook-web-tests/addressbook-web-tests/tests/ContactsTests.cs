@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
-
+using System;
+using System.Collections.Generic;
 
 namespace WebAddressbookTests
 {
@@ -33,9 +34,18 @@ namespace WebAddressbookTests
             contact.Notes = "17";
             contact.SecondaryHome = "18";
 
+            List<ContactData> old_contacts = app.Contacts.GetContactsList();
             app.Contacts
                 .CreateContact(contact);
             app.Navigator.OpenHomePage();
+
+            old_contacts.Add(contact);
+            List<ContactData> new_contacts = app.Contacts.GetContactsList();
+            
+            old_contacts.Sort();
+            new_contacts.Sort();
+
+            Assert.AreEqual(old_contacts, new_contacts);
         }
 
         [Test]
@@ -43,13 +53,25 @@ namespace WebAddressbookTests
         {
             ContactData contact = new ContactData();
             contact.FirstName = "1";
-            contact.MiddleName = "2";
+            contact.LastName = "2";
+
+            app.Navigator.OpenHomePage();
 
             app.Contacts
-                .CreateContactIfEmpty(contact)
-                .SelectContact(1)
+                .CreateContactIfEmpty(contact);
+
+            List<ContactData> old_contacts = app.Contacts.GetContactsList();
+            app.Contacts
+                .SelectContact(0)
                 .DeleteContact();
             app.AcceptAlert();
+
+            old_contacts.RemoveAt(0);
+            app.Navigator.OpenHomePage();
+            List<ContactData> new_contacts = app.Contacts.GetContactsList();
+            old_contacts.Sort();
+            new_contacts.Sort();
+            Assert.AreEqual(old_contacts, new_contacts);
         }
 
         [Test]
@@ -64,11 +86,21 @@ namespace WebAddressbookTests
             contact_mod.MiddleName = "2 mod";
 
             app.Contacts
-                .CreateContactIfEmpty(contact)
-                .EditContact(1)
+                .CreateContactIfEmpty(contact);
+
+            List<ContactData> old_contacts = app.Contacts.GetContactsList();
+
+            app.Contacts
+                .EditContact(0)
                 .FillContactForm(contact_mod)
                 .SubmitContactForm();
             app.Navigator.OpenHomePage();
+
+            old_contacts[0].FirstName = "1 mod";
+            List<ContactData> new_contacts = app.Contacts.GetContactsList();
+            old_contacts.Sort();
+            new_contacts.Sort();
+            Assert.AreEqual(old_contacts, new_contacts);
         }
     }
 }

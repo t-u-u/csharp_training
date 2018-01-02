@@ -20,15 +20,30 @@ namespace WebAddressbookTests
             return this;
         }
 
-        public GroupHelper EditGroups()
+        public List<GroupData> GetGroupList()
         {
-            driver.FindElement(By.XPath("(//input[@name='edit'])[2]")).Click();
+            List<GroupData> groups = new List<GroupData>();
+            // manager.Navigator.OpenGroupsPage();
+            ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("span.group"));
+            foreach (IWebElement element in elements)
+            {
+                groups.Add(new GroupData(element.Text));
+            }
+            return groups;
+        }
+
+        public GroupHelper EditGroups(int index)
+        {
+            string checkboxXpath = String.Format("(//input[@name='selected[]'])");
+            driver.FindElements(By.XPath(checkboxXpath))[index].Click();
+            string sXpath = String.Format("(//input[@name='edit'])[1]");
+            driver.FindElement(By.XPath(sXpath)).Click();
             return this;
         }
 
         public GroupHelper SelectGroup(int index)
         {
-            string sXpath = String.Format("(//input[@name='selected[]'])[{0}]", index);
+            string sXpath = String.Format("(//input[@name='selected[]'])[{0}]", index + 1);
             driver.FindElement(By.XPath(sXpath)).Click();
             return this;
         }
@@ -69,6 +84,7 @@ namespace WebAddressbookTests
             if (CountGroups() == 0)
             {
                 CreateGroup(groupData);
+                manager.Navigator.OpenGroupsPage();
             }
             return this;
         }
