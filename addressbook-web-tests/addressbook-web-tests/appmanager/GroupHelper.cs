@@ -17,19 +17,28 @@ namespace WebAddressbookTests
         public GroupHelper DeleteGroups()
         {
             driver.FindElement(By.XPath("(//input[@name='delete'])[2]")).Click();
+            GroupCache = null;
             return this;
         }
 
+        private List<GroupData> GroupCache = null;
+
         public List<GroupData> GetGroupList()
         {
-            List<GroupData> groups = new List<GroupData>();
-            // manager.Navigator.OpenGroupsPage();
-            ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("span.group"));
-            foreach (IWebElement element in elements)
+            if (GroupCache == null)
             {
-                groups.Add(new GroupData(element.Text));
+                GroupCache = new List<GroupData>();
+                // manager.Navigator.OpenGroupsPage();
+                ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("span.group"));
+                foreach (IWebElement element in elements)
+                {
+                    GroupCache.Add(new GroupData(element.Text)
+                        {
+                            Id = element.FindElement(By.TagName("input")).GetAttribute("value")
+                        });
+                }
             }
-            return groups;
+            return new List<GroupData>(GroupCache);
         }
 
         public GroupHelper EditGroups(int index)
@@ -64,12 +73,14 @@ namespace WebAddressbookTests
         public GroupHelper SubmitGroupCreation()
         {
             driver.FindElement(By.Name("submit")).Click();
+            GroupCache = null;
             return this;
         }
 
         public GroupHelper SubmitGroupUpdate()
         {
             driver.FindElement(By.Name("update")).Click();
+            GroupCache = null;
             return this;
         }
 

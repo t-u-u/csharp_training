@@ -11,6 +11,7 @@ namespace WebAddressbookTests
         private string group_name;
         private string group_header;
         private string group_footer;
+        private string id;
 
         public GroupData(string group_name)
         {
@@ -27,6 +28,7 @@ namespace WebAddressbookTests
         public string Group_name { get => group_name; set => group_name = value; }
         public string Group_header { get => group_header; set => group_header = value; }
         public string Group_footer { get => group_footer; set => group_footer = value; }
+        public string Id { get => id; set => id = value; }
 
         public int CompareTo(GroupData other)
         {

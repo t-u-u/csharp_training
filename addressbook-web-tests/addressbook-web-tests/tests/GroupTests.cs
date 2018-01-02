@@ -61,40 +61,56 @@ namespace WebAddressbookTests
         [Test]
         public void GroupUpdateTest()
         {
+            int index = 0;
             app.Navigator.OpenGroupsPage();
             app.Groups
                 .CreateGroupIfEmpty(new GroupData("111", "222", "333"));
             List<GroupData> oldGroups = app.Groups.GetGroupList();
+            GroupData oldData = oldGroups[index];
+
             app.Groups
-                .EditGroups(0)
+                .EditGroups(index)
                 .FillGroupForm(new GroupData("111 mod", "222 mod", "333 mod"))
                 .SubmitGroupUpdate();
             app.Navigator.OpenGroupsPage();
 
             List<GroupData> newGroups = app.Groups.GetGroupList();
-            oldGroups[0].Group_name = "111 mod";
+            oldGroups[index].Group_name = "111 mod";
             oldGroups.Sort();
             newGroups.Sort();
             Assert.AreEqual(oldGroups, newGroups);
+
+            foreach (GroupData group in newGroups)
+            {
+                if (group.Id == oldData.Id) {
+                    Assert.AreEqual(group.Group_name, oldData.Group_name);
+                }
+            }
         }
 
         [Test]
         public void GroupRemovalTest()
         {
+            int index = 0;
             app.Navigator.OpenGroupsPage();
             app.Groups
                 .CreateGroupIfEmpty(new GroupData("1", "2", "3"));
             List<GroupData> oldGroups = app.Groups.GetGroupList();
             app.Groups
-                .SelectGroup(0)
+                .SelectGroup(index)
                 .DeleteGroups();
             app.Navigator.OpenGroupsPage();
 
             List<GroupData> newGroups = app.Groups.GetGroupList();
-            oldGroups.RemoveAt(0);
+            oldGroups.RemoveAt(index);
             oldGroups.Sort();
             newGroups.Sort();
             Assert.AreEqual(oldGroups, newGroups);
+
+            foreach (GroupData group in newGroups)
+            {
+                Assert.AreNotEqual(group.Id, index);
+            }
         }
     }
 }
