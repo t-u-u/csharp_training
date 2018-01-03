@@ -17,6 +17,7 @@ namespace WebAddressbookTests
         public HelperBase(IWebDriver driver)
         {
             this.driver = driver;
+            //manager = ApplicationManager.GetInstance();
         }
 
         protected void Type(By locator, string text)

@@ -15,7 +15,7 @@ namespace WebAddressbookTests
             contact.MiddleName = "2";
             contact.LastName = "3";
             contact.Nickname = "4";
-            contact.PhotoPath = "c:\\temp\\1.gif";
+            //contact.PhotoPath = "c:\\temp\\1.gif";
             contact.Title = "5";
             contact.Company = "6";
             contact.Address = "7";
@@ -101,6 +101,34 @@ namespace WebAddressbookTests
             old_contacts.Sort();
             new_contacts.Sort();
             Assert.AreEqual(old_contacts, new_contacts);
+        }
+
+        [Test]
+        public void CheckEditFormFilling()
+        {
+            int index = 0;
+            app.Navigator.OpenHomePage();
+            ContactData contactFromTable = app.Contacts.getContactInfoFromTable(index);
+            app.Navigator.OpenHomePage();
+            ContactData contactFromForm = app.Contacts.getContactInfoFromEditForm(index);
+
+            Assert.AreEqual(contactFromTable, contactFromForm);
+            Assert.AreEqual(contactFromTable.Address, contactFromForm.Address);
+            Assert.AreEqual(contactFromTable.AllEmails, contactFromForm.AllEmails);
+            Assert.AreEqual(contactFromTable.AllPhones, contactFromForm.AllPhones);
+        }
+
+
+        [Test]
+        public void CheckDetailsFormFilling()
+        {
+            int index = 0;
+
+            app.Navigator.OpenHomePage();
+            ContactData contactFromEdit = app.Contacts.getContactInfoFromEditForm(index);
+            app.Navigator.OpenHomePage();
+            ContactData contactFromDetails = app.Contacts.getContactInfoFromDetailsForm(index);
+            Assert.AreEqual(contactFromEdit.FullDetails, contactFromDetails.FullDetails);
         }
     }
 }

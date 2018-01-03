@@ -88,6 +88,65 @@ namespace WebAddressbookTests
             return new List<ContactData>(ContactCache);
         }
 
+        internal ContactData getContactInfoFromTable(int index)
+        {
+            //manager.Navigator.OpenHomePage();
+
+            IList<IWebElement> cells = driver.FindElements(By.Name("entry"))[index]
+                .FindElements(By.TagName("td"));
+            ContactData contact = new ContactData();
+            contact.LastName = cells[1].Text;
+            contact.FirstName = cells[2].Text;
+            contact.Address = cells[3].Text;
+            contact.AllEmails = cells[4].Text;
+            contact.AllPhones = cells[5].Text;
+
+            return contact;
+        }
+
+        internal ContactData getContactInfoFromEditForm(int index)
+        {
+            //manager.Navigator.OpenHomePage();
+            EditContact(index);
+            ContactData contact = new ContactData();
+            contact.FirstName = driver.FindElement(By.Name("firstname")).GetAttribute("value");
+            contact.MiddleName = driver.FindElement(By.Name("middlename")).GetAttribute("value");
+            contact.LastName = driver.FindElement(By.Name("lastname")).GetAttribute("value");
+            contact.Nickname = driver.FindElement(By.Name("nickname")).GetAttribute("value");
+            contact.Title = driver.FindElement(By.Name("title")).GetAttribute("value");
+            contact.Company = driver.FindElement(By.Name("company")).GetAttribute("value");
+            contact.Address = driver.FindElement(By.Name("address")).GetAttribute("value");
+            contact.PhoneHome = driver.FindElement(By.Name("home")).GetAttribute("value");
+            contact.PhoneMobile = driver.FindElement(By.Name("mobile")).GetAttribute("value");
+            contact.PhoneWork = driver.FindElement(By.Name("work")).GetAttribute("value");
+            contact.PhoneFax = driver.FindElement(By.Name("fax")).GetAttribute("value");
+            contact.Email = driver.FindElement(By.Name("email")).GetAttribute("value");
+            contact.Email2 = driver.FindElement(By.Name("email2")).GetAttribute("value");
+            contact.Email3 = driver.FindElement(By.Name("email3")).GetAttribute("value");
+            contact.Homepage = driver.FindElement(By.Name("homepage")).GetAttribute("value");
+            contact.Birthday = new ContactData.Date(driver.FindElement(By.Name("bday")).GetAttribute("value"),
+                driver.FindElement(By.Name("bmonth")).GetAttribute("value"),
+                driver.FindElement(By.Name("byear")).GetAttribute("value"));
+            contact.Anniversary = new ContactData.Date(driver.FindElement(By.Name("aday")).GetAttribute("value"),
+                driver.FindElement(By.Name("amonth")).GetAttribute("value"),
+                driver.FindElement(By.Name("ayear")).GetAttribute("value"));
+            contact.SecondaryAddress = driver.FindElement(By.Name("address2")).GetAttribute("value");
+            contact.Notes = driver.FindElement(By.Name("notes")).GetAttribute("value");
+            contact.SecondaryHome = driver.FindElement(By.Name("phone2")).GetAttribute("value");
+
+            return contact;
+        }
+
+        internal ContactData getContactInfoFromDetailsForm(int index)
+        {
+            //manager.Navigator.OpenHomePage();
+            OpenContactDetails(index);
+            ContactData contact = new ContactData();
+            contact.FullDetails = driver.FindElement(By.CssSelector("div#content")).Text;
+            return contact;
+        }
+
+
         public ContactHelper InitContactCreation()
         {
             driver.FindElement(By.LinkText("add new")).Click();
@@ -111,6 +170,13 @@ namespace WebAddressbookTests
         public ContactHelper EditContact(int index)
         {
             string sXpath = String.Format("//img[@title='Edit'][{0}]", index + 1);
+            driver.FindElement(By.XPath(sXpath)).Click();
+            return this;
+        }
+
+        public ContactHelper OpenContactDetails(int index)
+        {
+            string sXpath = String.Format("//img[@title='Details'][{0}]", index + 1);
             driver.FindElement(By.XPath(sXpath)).Click();
             return this;
         }

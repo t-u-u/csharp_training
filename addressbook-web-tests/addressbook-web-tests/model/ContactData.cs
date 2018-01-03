@@ -37,9 +37,11 @@ namespace WebAddressbookTests
         private string phoneMobile;
         private string phoneWork;
         private string phoneFax;
+        private string allPhones;
         private string email;
         private string email2;
         private string email3;
+        private string allEmails;
         private string homepage;
         private Date birthday;
         private Date anniversary;
@@ -47,6 +49,7 @@ namespace WebAddressbookTests
         private string secondaryAddress;
         private string secondaryHome;
         private string notes;
+        private string fullDetails;
 
         public ContactData() { }
 
@@ -72,6 +75,126 @@ namespace WebAddressbookTests
         public string SecondaryAddress { get => secondaryAddress; set => secondaryAddress = value; }
         public string SecondaryHome { get => secondaryHome; set => secondaryHome = value; }
         public string Notes { get => notes; set => notes = value; }
+        public string AllPhones
+        {
+            get
+            {
+                if (allPhones != null)
+                {
+                    return allPhones;
+                }
+                else
+                {
+                    return (CleanUp(PhoneHome) + CleanUp(PhoneMobile) + CleanUp(PhoneWork) + CleanUp(SecondaryHome)).Trim();
+                }
+            }
+
+            set
+            {
+                allPhones = value;
+            }
+        }
+
+        public string AllEmails {
+            get
+            {
+                if (allEmails != null)
+                    return allEmails;
+                else
+                {
+                    return (CleanUp(Email) + CleanUp(Email2) + CleanUp(Email3)).Trim();
+                }
+            }
+            set => allEmails = value; }
+
+        public string FullDetails {
+            get
+            {
+                if (fullDetails != null)
+                {
+                    return fullDetails;
+                }
+                else
+                {
+                    string sPhones = "";
+                    if (PhoneHome != null && !PhoneHome.Equals(""))
+                    {
+                        sPhones += "H: " + CleanUp(PhoneHome);
+                    }
+                    if (PhoneMobile != null && !PhoneMobile.Equals(""))
+                    {
+                        sPhones += "M: " + CleanUp(PhoneMobile);
+                    }
+                    if (PhoneWork != null && !PhoneWork.Equals(""))
+                    {
+                        sPhones += "W: " + CleanUp(PhoneWork);
+                    }
+                    if (PhoneFax != null && !PhoneFax.Equals(""))
+                    {
+                        sPhones += "F: " + CleanUp(PhoneFax);
+                    }
+
+                    string sHomepage = "";
+                    if (Homepage != null && !Homepage.Equals(""))
+                    {
+                        sHomepage = "Homepage:\r\n" + CleanUp(Homepage);
+                    }
+
+                    string sBirthday = "";
+                    if (Birthday.Day != null)
+                        sBirthday += Birthday.Day + ". ";
+                    if (Birthday.Month != null)
+                        sBirthday += Birthday.Month + " ";
+                    if (Birthday.Year != null)
+                        sBirthday += Birthday.Year;
+                    if (!sBirthday.Equals(""))
+                        sBirthday = "Birthday " + sBirthday + "\r\n";
+
+                    string sAnniversary = "";
+                    if (Anniversary.Day != null)
+                        sAnniversary += Anniversary.Day + ". ";
+                    if (Anniversary.Month != null)
+                        sAnniversary += Anniversary.Month + " ";
+                    if (Anniversary.Year != null)
+                        sAnniversary += Anniversary.Year;
+                    if (!sAnniversary.Equals(""))
+                        sAnniversary = "Anniversary " + sAnniversary + "\r\n";
+
+                    string sSecondaryPhone = "";
+                    if (SecondaryHome != null && !SecondaryHome.Equals(""))
+                    {
+                        sSecondaryPhone = "P: " + CleanUp(SecondaryHome) + "\r\n";
+                    }
+
+                    string str = CleanUp(FirstName, false) + " " + CleanUp(MiddleName, false) + " " + CleanUp(LastName, false) + "\r\n"
+                        + CleanUp(Nickname) + "\r\n"
+                        + CleanUp(Title) + CleanUp(Company) + CleanUp(Address) + "\r\n"
+                        + sPhones + "\r\n"
+                        + AllEmails + "\r\n" + sHomepage + "\r\n"
+                        + sBirthday + sAnniversary + "\r\n"
+                        + CleanUp(SecondaryAddress) + "\r\n"
+                        + sSecondaryPhone + Notes
+                        ;
+
+                    return str;
+                }
+            }
+
+            set => fullDetails = value; }
+
+        private string CleanUp(string str, bool withNewLine = true)
+        {
+            if (str == null || str.Equals(""))
+                return "";
+            string[] wasteSymbols = new string[] { " ", "+", "-", "(", ")" };
+            foreach (string sym in wasteSymbols)
+            {
+                str.Replace(sym, "");
+            }
+            if (withNewLine)
+                return str + "\r\n";
+            return str;
+        }
 
         public bool Equals(ContactData other)
         {
