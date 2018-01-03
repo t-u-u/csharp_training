@@ -7,7 +7,21 @@ namespace WebAddressbookTests
     [TestFixture]
     public class GroupTests : AuthTestBase
     {
-        [Test]
+        public static IEnumerable<GroupData> RandomGroupDataProvider()
+        {
+            List<GroupData> groups = new List<GroupData>();
+            for (int i = 0; i < 5; i++)
+            {
+                groups.Add(new GroupData(GenerateRandomString(30))
+                {
+                    Group_header = GenerateRandomString(100),
+                    Group_footer = GenerateRandomString(100)
+                });
+            }
+            return groups;
+        }
+
+        [Test, TestCaseSource("RandomGroupDataProvider")]
         public void GroupCreationTest()
         {
             app.Navigator.OpenGroupsPage();
@@ -36,22 +50,6 @@ namespace WebAddressbookTests
                 .CreateGroup(new GroupData("111'", "222", "333"));
             app.Navigator.OpenGroupsPage();
             
-            List<GroupData> groups = app.Groups.GetGroupList();
-            oldGroups.Sort();
-            groups.Sort();
-            Assert.AreEqual(oldGroups, groups);
-        }
-
-        [Test]
-        public void EmptyGroupCreationTest()
-        {
-            app.Navigator.OpenGroupsPage();
-            List<GroupData> oldGroups = app.Groups.GetGroupList();
-            app.Groups
-                .CreateGroup(new GroupData("", "", ""));
-            app.Navigator.OpenGroupsPage();
-
-            oldGroups.Add(new GroupData("", "", ""));
             List<GroupData> groups = app.Groups.GetGroupList();
             oldGroups.Sort();
             groups.Sort();

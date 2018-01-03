@@ -59,7 +59,7 @@ namespace WebAddressbookTests
 
         public override string ToString()
         {
-            return Group_name;
+            return Group_name + "\n" + Group_header + "\n" + Group_footer;
         }
     }
 }
